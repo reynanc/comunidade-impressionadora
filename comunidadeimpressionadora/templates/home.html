@@ -1,0 +1,110 @@
+{% extends 'base.html' %}
+
+{% block body %}
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='home.css') }}">
+<!-- Hero Section -->
+<div class="hero-section">
+    <div class="floating-element"></div>
+    <div class="floating-element"></div>
+    <div class="floating-element"></div>
+    
+    <div class="container">
+        <div class="hero-content text-center">
+            <h1 class="display-4 fw-bold mb-3">
+                <i class="fas fa-users me-3"></i>
+                Comunidade Impressionadora
+            </h1>
+            <h2 class="h4 mb-4 opacity-90">
+                <i class="fas fa-graduation-cap me-2"></i>
+                Alunos, experts e a galera da Hashtag em um só lugar
+            </h2>
+            <div class="d-flex justify-content-center gap-3 flex-wrap">
+                <span class="badge bg-light text-dark px-3 py-2 rounded-pill">
+                    <i class="fas fa-rocket me-1"></i> Inovação
+                </span>
+                <span class="badge bg-light text-dark px-3 py-2 rounded-pill">
+                    <i class="fas fa-heart me-1"></i> Comunidade
+                </span>
+                <span class="badge bg-light text-dark px-3 py-2 rounded-pill">
+                    <i class="fas fa-star me-1"></i> Excelência
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Posts Section -->
+<div class="container">
+    {% if posts %}
+        <div class="row">
+            {% for post in posts %}
+            <div class="col-12 mb-4">
+                <div class="post-card">
+                    <div class="row g-0">
+                        <!-- Author Section -->
+                        <div class="col-md-3">
+                            <div class="author-section h-100 d-flex flex-column align-items-center">
+                                <img src="{{ url_for('static', filename='fotos_perfil/{}'.format(post.autor.foto_perfil)) }}" 
+                                     class="author-photo mb-3" 
+                                     alt="{{ post.autor.username }}">
+                                
+                                <div class="author-name text-center">{{ post.autor.username }}</div>
+                                
+                                <div class="courses-container d-flex flex-wrap justify-content-center">
+                                    {% for curso in post.autor.cursos.split(';') %}
+                                        <span class="course-badge">{{ curso }}</span>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Post Content -->
+                        <div class="col-md-9">
+                            <div class="post-content">
+                                <a href="{{ url_for('exibir_post', post_id=post.id) }}" class="post-title">
+                                    <h3 class="mb-3">
+                                        <i class="fas fa-file-alt me-2 text-primary"></i>
+                                        {{ post.titulo }}
+                                    </h3>
+                                </a>
+                                
+                                <div class="post-body">
+                                    {{ post.corpo[:200] }}{% if post.corpo|length > 200 %}...{% endif %}
+                                </div>
+                                
+                                <div class="post-meta">
+                                    <div class="post-info">
+                                        <small class="text-muted">
+                                            <i class="fas fa-calendar-alt me-1"></i>
+                                            {{ post.data_criacao.strftime('%d/%m/%Y às %H:%M') }}
+                                        </small>
+                                    </div>
+                                    
+                                    <a href="{{ url_for('exibir_post', post_id=post.id) }}" class="read-more-btn">
+                                        <i class="fas fa-book-open"></i>
+                                        Ler mais
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="empty-state">
+            <i class="fas fa-comments"></i>
+            <h3>Nenhum post encontrado</h3>
+            <p class="lead">Seja o primeiro a compartilhar algo incrível com a comunidade!</p>
+            <a href="{{ url_for('criar_post') }}" class="btn btn-primary btn-lg rounded-pill">
+                <i class="fas fa-plus me-2"></i>
+                Criar primeiro post
+            </a>
+        </div>
+    {% endif %}
+</div>
+
+<script src="{{ url_for('static', filename='home.js') }}"></script>
+
+{% endblock %}
